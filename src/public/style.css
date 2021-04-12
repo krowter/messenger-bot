@@ -1,0 +1,30 @@
+html,
+body,
+#messenger__terminal {
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+#messenger__terminal {
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+#messenger__terminal,
+#messenger__user-input {
+  color: #333;
+  font-size: 1.5rem;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: 600;
+}
+
+#messenger__row {
+  display: flex;
+}
+
+#messenger__user-input {
+  border: none;
+  display: block;
+  margin-left: 1ch;
+  width: 100%;
+}
