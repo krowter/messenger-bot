@@ -2,45 +2,42 @@ const fs = require("fs");
 
 const emitters = {
   //send this upon initial connection
-  initial: (socket) =>
-    socket.emit("bot-event", {
-      userResponseEvent: "new-user__name:submit",
-      message: "Hi! I see you're a new user. What's your name?",
-    }),
-  birthday: (socket) =>
-    socket.emit("bot-event", {
-      userResponseEvent: "new-user__birthday:submit",
-      message:
-        "Bots like me weren't born, we're created. What about you, when were you born?",
-    }),
-  nextBirthdayWhen: (socket) =>
-    socket.emit("bot-event", {
-      userResponseEvent: "new-user__next-birthday-when:submit",
-      message: "Hi! I see you're a new user. What's your name?",
-    }),
-  goodbye: (socket) =>
-    socket.emit("bot-event", {
-      userResponseEvent: "new-user__next-birthday-when:submit",
-      message: "Bye!",
-    }),
+  initial: {
+    userResponseEvent: "user_name",
+    message: "Hi! I see you're a new user. What's your name?",
+  },
+  birthday: {
+    userResponseEvent: "user_birthday",
+    message:
+      "Bots like me weren't born, we're created. What about you, when were you born?",
+  },
+  nextBirthdayWhen: {
+    userResponseEvent: "user_next-birthday-when",
+    message: "Hi! I see you're a new user. What's your name?",
+  },
+  goodbye: {
+    userResponseEvent: "user_next-birthday-when",
+    message: "Bye!",
+  },
 };
 
-const handlers = (socket) => {
-  socket.on("new-user__name:submit", (arg) => {
-    fs.appendFileSync("message.txt\n", arg);
-    emitters.birthday(socket);
-  });
-  socket.on("new-user__birthday:submit", (arg) => {
-    fs.appendFileSync("message.txt\n", arg);
-    emitters.nextBirthdayWhen(socket);
-  });
-  socket.on("new-user__next-birthday-when:submit", (arg) => {
-    fs.appendFileSync("message.txt\n", arg);
-    emitters.goodbye(socket);
-  });
-};
+const handlers = [
+  { eventName: "user_name", emitter: emitters.birthday },
+  { eventName: "user_birthday", emitter: emitters.nextBirthdayWhen },
+  { eventName: "user_next-birthday-when", emitter: emitters.goodbye },
+];
 
 export default (socket) => {
-  emitters.initial(socket);
-  handlers(socket);
+  // to be displayed on terminal in client-side
+  const botName = "Bot";
+
+  // send welcome message initially
+  socket.emit("bot-event", { ...emitters.initial, botName });
+
+  handlers.forEach(({ eventName, emitter }) => {
+    socket.on(eventName, (message) => {
+      fs.appendFileSync("message.txt", message);
+      socket.emit("bot-event", { ...emitter, botName });
+    });
+  });
 };
