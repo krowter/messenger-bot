@@ -11,13 +11,13 @@ const socket = io();
 class Messenger {
   constructor(socket) {
     this.socket = socket;
-    this.event = "";
+    this.nextEvent = "";
 
     socket.on("bot-event", (arg) => {
       main.removeChild(loadingIndicator);
-      this.event = arg.userResponseEvent;
+      this.nextEvent = arg.nextEvent;
 
-      printTextOnTerminal(main, arg.message, arg.botName);
+      this.printTextOnTerminal(main, arg.message, arg.botName);
       main.appendChild(row);
       input.value = "";
       input.focus();
@@ -37,10 +37,10 @@ class Messenger {
 
   keydownEventHandler = ({ key }) => {
     if (key === "Enter") {
-      printTextOnTerminal(main, input.value, userName.textContent);
+      this.printTextOnTerminal(main, input.value, userName.textContent);
       main.removeChild(row);
 
-      socket.emit(this.event, input.value);
+      socket.emit(this.nextEvent, input.value);
       main.appendChild(loadingIndicator);
     }
   };

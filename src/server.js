@@ -14,7 +14,7 @@ const io = require("socket.io")(http);
 const db = new JsonDB(new Config("database", true));
 
 // serve supporting css and js file
-app.use(express.static("src/public"));
+app.use(express.static("src/client"));
 app.use((req, res, next) => {
   req.io = io;
   next();
@@ -30,7 +30,7 @@ const requestListener = function (req, res) {
   //serve the app on root path
   if (req.url === "/") req.url = "/index.html";
   //serve supporting static files
-  fs.readFile(__dirname + "/public/index.html", (err, data) => {
+  fs.readFile(__dirname + "/client/index.html", (err, data) => {
     res.writeHead(200);
     res.end(data);
   });
