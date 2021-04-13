@@ -34,6 +34,7 @@ export default (socket) => {
         socket.db.push(`/messages/${userId}[${index}]`, {
           eventName,
           message,
+          timestamp: new Date().toISOString(),
         });
 
         socket.emit(event, {
