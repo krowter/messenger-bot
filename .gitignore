@@ -1,1 +1,7 @@
 node_modules
+
+# local database
+database.json
+
+# build bundle
+dist
