@@ -1,5 +1,5 @@
 {
-  "name": "web-terminal",
+  "name": "messenger-bot",
   "version": "1.0.0",
   "main": "dist/server.js",
   "license": "MIT",
