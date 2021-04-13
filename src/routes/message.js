@@ -24,9 +24,13 @@ router.get("/:userId/:messageId/delete", ({}, res) => {
 router.delete("/:userId/:messageId/delete", (req, res) => {
   const { userId, messageId } = req.params;
   try {
-    const data = req.db.delete(`/messages/${userId}/${messageId}`);
-    res.sendStatus(200);
+    const isExists = req.db.getData(`/messages/${userId}/${messageId}`);
+    if (!isExists) throw DataError;
+
+    req.db.delete(`/messages/${userId}/${messageId}`);
+    res.send(200);
   } catch (DataError) {
+    console.log(DataError);
     res.sendStatus(404);
   }
 });
