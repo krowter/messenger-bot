@@ -1,7 +1,7 @@
 import { customAlphabet } from "nanoid";
 
+import { storeUserData } from "../helpers";
 import { handlers } from "./handlers";
-import { getNextBirthday } from "../helpers";
 
 // easier for humans to read and type
 const nanoid = customAlphabet("123456789ABCDEF", 6);
@@ -16,7 +16,7 @@ export default (socket) => {
   const botName = "Bot";
   const event = "bot-event";
   const userId = nanoid();
-  let userName = "";
+  let user = {};
 
   // welcome message
   socket.emit(event, { ...initialEvent, botName });
@@ -27,10 +27,8 @@ export default (socket) => {
   handlers.forEach(({ eventName, response, validation }, index) => {
     socket.on(eventName, (message) => {
       if (validation.pattern.test(message)) {
-        // store user's name for subsequent messages
-        if (eventName === "user_name") {
-          userName = message;
-        }
+        // update user data to be used in subsequent messages
+        user = storeUserData(user, eventName, message);
 
         // group messages by userId
         socket.db.push(`/messages/${userId}[${index}]`, {
@@ -40,7 +38,7 @@ export default (socket) => {
 
         socket.emit(event, {
           ...response,
-          message: response.message(userName),
+          message: response.message(user),
           botName,
         });
       } else {
