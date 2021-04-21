@@ -1,15 +1,23 @@
 require("dotenv").config();
-
 import express from "express";
 const router = express.Router();
 
-router.post("/", (req, res) => {
-  let body = req.body;
+import { handleMessage } from "../controllers/messengerBot";
 
+router.post("/", (req, res) => {
+  const { body, db } = req;
+
+  // ensure webhook event is from a `page` subscription
   if (body.object === "page") {
     body.entry.forEach(function (entry) {
-      let webhook_event = entry.messaging[0];
-      console.log(webhook_event);
+      const webhook_event = entry.messaging[0];
+      const sender_id = webhook_event.sender.id;
+
+      handleMessage(
+        sender_id,
+        webhook_event.message ?? webhook_event.postback,
+        db
+      );
     });
 
     res.status(200).send("EVENT_RECEIVED");

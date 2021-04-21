@@ -16,14 +16,25 @@ export const getNextBirthday = (_birthdate) => {
   return Math.round(milisecondsToDays(birthdate - today));
 };
 
-export const storeUserData = (user = {}, eventName, message) => {
-  if (eventName === "user_name") {
-    user.name = message;
-  }
-  if (eventName === "user_birthday") {
-    user.birthdate = message;
-  }
-  user.previousMessage = message;
+export const getState = (states, stateId) =>
+  states.find(({ id }) => id === stateId);
 
-  return user;
+export const createQuickReply = (message, yes, no) => {
+  const response = {
+    text: message,
+    quick_replies: [
+      {
+        content_type: "text",
+        title: yes,
+        payload: "YES",
+      },
+      {
+        content_type: "text",
+        title: no,
+        payload: "NO",
+      },
+    ],
+  };
+
+  return response;
 };
