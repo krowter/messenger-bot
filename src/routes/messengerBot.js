@@ -2,7 +2,7 @@ require("dotenv").config();
 import express from "express";
 const router = express.Router();
 
-import { handleMessage } from "../controllers/messengerBot";
+import { handleMessage } from "../messenger/messengerBot";
 
 router.post("/", (req, res) => {
   const { body, db } = req;

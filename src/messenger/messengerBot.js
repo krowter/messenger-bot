@@ -1,7 +1,7 @@
-import { callSendAPI } from "./sendMessage";
-
+import { callSendAPI } from "../controllers/sendMessage";
 import { messengerStates as states } from "./states";
 import { getState } from "../helpers";
+import { updateUserData } from "../controllers/updateUser";
 
 export const handleMessage = async (senderId, received_message, db) => {
   if (received_message?.is_echo) return;
@@ -34,20 +34,7 @@ export const handleMessage = async (senderId, received_message, db) => {
       state.response ??
       state.payloadHandler[received_message.quick_reply?.payload ?? "NO"];
 
-    await db.collection("messenger-bot-data").updateOne(
-      {
-        userId: senderId,
-      },
-      {
-        $set: {
-          currentState: state.id,
-          [state.id]: received_message?.text,
-        },
-      },
-      {
-        upsert: true,
-      }
-    );
+    updateUserData(db, { senderId, received_message, state });
 
     //pass user data to handlers
     callSendAPI(senderId, message(user));
