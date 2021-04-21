@@ -3,11 +3,13 @@ const HOST = process.env.HOST || "0.0.0.0";
 
 import fs from "fs";
 import express from "express";
+import bodyParser from "body-parser";
 import eventHandlers from "./events";
 import { JsonDB } from "node-json-db";
 import { Config } from "node-json-db/dist/lib/JsonDBConfig";
 
 import MessageRoutes from "./routes/message";
+import MessengerBotRoutes from "./routes/messengerBot";
 
 const app = express();
 const http = require("http").Server(app);
@@ -16,6 +18,8 @@ const db = new JsonDB(new Config("database", true));
 
 // serve supporting css and js file
 app.use(express.static("src/client"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // middleware to allow access to database
 app.use((req, {}, next) => {
@@ -29,6 +33,7 @@ io.use((socket, next) => {
 
 // routes
 app.use("/messages", MessageRoutes);
+app.use("/webhook", MessengerBotRoutes);
 
 // messenger event handlers
 io.on("connection", eventHandlers);
