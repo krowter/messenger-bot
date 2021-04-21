@@ -48,7 +48,7 @@ export const messengerStates = [
     type: "regular",
     payloadHandler: {
       YES: (user) => {
-        const daysLeftUntilNextBirthday = getNextBirthday(user.birthdate);
+        const daysLeftUntilNextBirthday = getNextBirthday(user.question3);
         const isToday =
           daysLeftUntilNextBirthday === 0 || daysLeftUntilNextBirthday === 365;
 
