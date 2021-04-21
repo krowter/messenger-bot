@@ -13,7 +13,6 @@ Emulate simple chatbot using Node JS and Socket IO.
 ### Notes:
 
 - Sent messages are validated in the server and will return appropriate error responses: "**Can you please write it in form of YYYY-MM-DD?**" or "**Please answer using yes or no**"
-- User messages are stored in local database using [node-json-db](https://www.npmjs.com/package/node-json-db) and will persist after restarting the server.
 
 ## Getting Started
 
