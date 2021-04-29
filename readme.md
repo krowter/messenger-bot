@@ -1,6 +1,6 @@
 # Messenger
 
-Emulate simple chatbot using Node JS and Socket IO.
+Create simple chatbot using Node JS and Messenger.
 
 ![normal user flow](./assets/normal-user-flow.gif)
 
